@@ -8,17 +8,20 @@ const app = Vue.createApp({
         {
           title: 'The King Return',
           author: 'my author',
-          img: 'assets/1.jpg'
+          img: 'assets/1.jpg',
+          isFav: true
         },
         {
           title: 'Harry potter',
           author: 'my author',
-          img: 'assets/2.jpg'
+          img: 'assets/2.jpg',
+          isFav: false
         },
         {
           title: 'Hes man',
           author: 'my author',
-          img: 'assets/3.jpg'
+          img: 'assets/3.jpg',
+          isFav: true
         },
       ]
     }
@@ -27,17 +30,13 @@ const app = Vue.createApp({
     toggleShowBooks(value) {
       this.showBooks = !this.showBooks
     },
-
-    handleEvent(e, data) {
-      console.log(e, e.type)
-
-      if(data) {
-        console.log(data)
-      }
+    toggleFav(book) {
+      book.isFav =  !book.isFav
     },
-    handleMousemove(e) {
-      this.x = e.offsetX
-      this.y = e.offsetY
+  },
+  computed: {
+    filteredBooks() {
+      return this.books.filter((book)=> book.isFav)
     }
   }
 })

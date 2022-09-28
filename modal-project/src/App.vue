@@ -1,23 +1,33 @@
 <template>
   <h1>{{ title }}</h1>
-  <input type="text" ref="name">
-  <button @click="handleClick">Click me</button>
+  <div v-if="showModal">
+    <ModalApp :header="header" :text="text" @close="toggleModal" theme="sale" />
+  </div>
+  <button @click="toggleModal">Open Modal</button>
 </template>
 
 <script>
+import ModalApp from './components/ModalApp.vue'
 
 export default {
   name: 'App',
+  components: { ModalApp },
 
   data () {
     return {
-      title: 'My first vue app!!'
+      title: 'My first vue app!!1',
+      header: 'Sign up for the Giveaway!1',
+      text: 'The content text test !!1!',
+      showModal: false
     }
   },
   methods: {
     handleClick () {
       console.log(this.$refs.name.value)
       this.$refs.name.classList.add('active')
+    },
+    toggleModal () {
+      this.showModal = !this.showModal
     }
   }
 }
