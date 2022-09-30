@@ -1,9 +1,23 @@
 <template>
   <h1>{{ title }}</h1>
-  <div v-if="showModal">
-    <ModalApp :header="header" :text="text" @close="toggleModal" theme="sale" />
-  </div>
+  <teleport to=".modals" v-if="showModal">
+    <ModalApp @close="toggleModal" theme="sale">
+      <template v-slot:links>
+        <a href="#">Sign up now</a>
+        <a href="#">More info</a>
+      </template>
+      <h1>Sign up for the Giveaway!</h1>
+      <p>The content text test !</p>
+    </ModalApp>
+  </teleport>
+  <teleport to=".modals" v-if="showModalTwo">
+    <ModalApp @close="toggleModal2">
+      <h1>Sign up for modal 2!</h1>
+      <p>The content text test !</p>
+    </ModalApp>
+  </teleport>
   <button @click="toggleModal">Open Modal</button>
+  <button @click="toggleModal2">Open Modal 2</button>
 </template>
 
 <script>
@@ -18,7 +32,8 @@ export default {
       title: 'My first vue app!!1',
       header: 'Sign up for the Giveaway!1',
       text: 'The content text test !!1!',
-      showModal: false
+      showModal: false,
+      showModalTwo: false
     }
   },
   methods: {
@@ -28,13 +43,18 @@ export default {
     },
     toggleModal () {
       this.showModal = !this.showModal
+    },
+    toggleModal2 () {
+      console.log('abc')
+      this.showModalTwo = !this.showModalTwo
+      console.log(this.showModalTwo)
     }
   }
 }
 </script>
 
 <style>
-#app {
+#app, .modals {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
