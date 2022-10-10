@@ -1,9 +1,8 @@
 <template>
-  <div class="home">
-    <h1> Home</h1>
+  <div class="tag">
     <div v-if="error">{{ error }}</div>
     <div v-if="posts.length" class="layout">
-      <post-list :posts="posts" />
+      <post-list :posts="postCurrentTag" />
       <tag-cloud :posts="posts" />
     </div>
     <div v-else>
@@ -13,33 +12,34 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import PostList from '../components/PostList.vue'
-import getPosts from '../composables/getPosts'
+import getPosts from '@/composables/getPosts'
+import { useRoute } from 'vue-router'
+import { computed } from '@vue/runtime-core'
 import Spinner from '@/components/Spinner.vue'
 import TagCloud from '../components/TagCloud.vue'
 
 export default {
   components: { PostList, Spinner, TagCloud },
-  name: 'HomeView',
+
   setup() {
     const {posts, error, load } = getPosts()
+    const route = useRoute()
+
+    const postCurrentTag = computed( () => {
+      return posts.value.filter(post => post.tags.includes(route.params.tag))
+    })
 
     load()
-    return { posts, error }
+    return { posts, error, postCurrentTag }
   }
 }
 </script>
 
 <style>
-  .home {
+  .tag {
     max-width: 1200px;
     margin: 0 auto;
     padding: 10px;
-  }
-  .layout {
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    gap: 20px;
   }
 </style>
