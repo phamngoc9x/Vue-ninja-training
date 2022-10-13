@@ -6,6 +6,7 @@
     <div v-if="post" class="post">
       <h3> {{ post.title }}</h3>
       <p class="pre">{{ post.body }}</p>
+      <button class="delete" @click="handleDelete">Delete post</button>
     </div>
     <div v-else>
       <Spinner />
@@ -16,15 +17,22 @@
 <script>
 import getPost from '@/composables/getPost';
 import Spinner from '@/components/Spinner.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+
+import { projectFirestore } from '@/firebase/config';
 export default {
     props: ["id"],
     setup() {
         const route = useRoute()
-        console.log('router',route);
+        const router = useRouter()
         const { post, error, load } = getPost(route.params.id);
         load();
-        return { post, error };
+
+        const handleDelete = async () => {
+          await projectFirestore.collection('posts').doc(route.params.id).delete()
+          router.push({name: 'home'})
+        }
+        return { post, error, handleDelete };
     },
     components: { Spinner }
 }
@@ -45,5 +53,13 @@ export default {
   }
   .pre {
     white-space: pre-wrap;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button.delete {
+    margin: 10px auto;
   }
 </style>
