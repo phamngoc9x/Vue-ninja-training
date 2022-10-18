@@ -12,11 +12,13 @@
 <script>
 import useLogin from '@/composables/useLogin';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const email = ref('')
     const password = ref('')
+    const router = useRouter()
 
     const { login, error, isPending } = useLogin()
 
@@ -24,6 +26,7 @@ export default {
       const res = await login(email.value, password.value)
       if(!error.value) {
         console.log('this is login ', res);
+        router.push({name: 'home'})
       }
     }
 
