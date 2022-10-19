@@ -6,12 +6,13 @@ const getCollection = (collection) => {
   const error = ref(null)
 
   let collectionRef = projectFirestore.collection(collection)
-    .orderBy('createdAt')
+    .orderBy('createAt')
   const unsub =  collectionRef.onSnapshot(snap => {
     let results = []
     snap.docs.forEach(doc => {
-      doc.data().createdAt && results.push({ ...doc.data(), id: doc.id })
+      doc.data().createAt && results.push({ ...doc.data(), id: doc.id })
     })
+    console.log('results', results)
     console.log('snap shot');
     documents.value = results
     error.value = null

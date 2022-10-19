@@ -7,7 +7,8 @@
 		<input type="file" @change="handleChange">
 		<div class="error">{{ fileError }}</div>
 		<div class="error"> {{ error }}</div>
-		<button>Create</button>
+		<button v-if="!isPending">Create</button>
+		<button v-else disabled>Saving...</button>
 	</form>
 </template>
 
@@ -17,6 +18,7 @@ import useStorage from '@/composables/useStorage'
 import useCollection from '@/composables/useCollection'
 import getUser from '@/composables/getUser'
 import { timestamp } from '@/firebase/config'
+import { useRouter } from 'vue-router'
 
 export default {
 	setup() {
@@ -24,15 +26,31 @@ export default {
 		const description = ref('')
 		const file = ref(null)
 		const fileError = ref(null)
-
-		const { addDoc, error } = useCollection()
-
+		const isPending = ref(false)
+		const router = useRouter()
+	
+		const { user } = getUser()
+		const { addDoc, error } = useCollection('skilllists')
 		const { uploadImage, filePath, url } = useStorage()
-
 		const handleSubmit = async () => {
 			if (file.value) {
+				isPending.value = true
 				await uploadImage(file.value)
-				console.log('image uploaded, url: ', url.value);
+				await addDoc({
+					title: title.value,
+					description: description.value,
+					userId: user.value.uid,
+					userName: user.value.displayName,
+					coverUrl: url.value,
+					filePath: filePath.value,
+					skills: [],
+					createAt: timestamp()
+				})
+				if(!error.value) {
+					console.log('skill added');
+					isPending.value = false
+					router.push({name: 'home'})
+				}
 			}
 		}
 
@@ -51,7 +69,7 @@ export default {
 			}
 		}
 
-		return { title, description, handleSubmit, handleChange , fileError, error}
+		return { title, description, handleSubmit, handleChange , fileError, error, isPending}
 	}
 }
 </script>
