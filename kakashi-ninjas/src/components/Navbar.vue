@@ -2,13 +2,14 @@
   <div class="navbar">
     <nav>
       <img src="@/assets/logo.png" alt="ninja">
-      <h1> <router-link :to="{ name : 'home'}">Kakashi Ninjas</router-link> </h1>
+      <h1> <router-link :to="{ name : 'home'}">Favourite Ninjas</router-link> </h1>
       <div class="links">
         <div class="inline" v-if="!user">
           <router-link class="btn" :to="{ name: 'Signup'}">Signup</router-link>
           <router-link class="btn" :to="{ name: 'Login'}">Login</router-link>
         </div>
         <div v-else class="inline">
+          <router-link :to="{ name: 'CreateCharacters' }">Create characters</router-link>
           <button @click="handleLogout">Logout</button>
         </div>
       </div>

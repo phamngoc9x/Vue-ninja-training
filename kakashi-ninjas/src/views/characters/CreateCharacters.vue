@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="handleSubmit">
-		<h4>Create new Skill List</h4>
-		<input type="text" required placeholder="Skill list title" v-model="title">
-		<textarea  v-model="description" placeholder="Skill list description..."></textarea>
-		<label>Upload skill list cover image</label>
+		<h4>Create new Characters</h4>
+		<input type="text" required placeholder="Characters name" v-model="title">
+		<textarea  v-model="description" placeholder="Characters description..."></textarea>
+		<label>Upload characters cover image</label>
 		<input type="file" @change="handleChange">
 		<div class="error">{{ fileError }}</div>
 		<div class="error"> {{ error }}</div>
@@ -30,13 +30,12 @@ export default {
 		const router = useRouter()
 	
 		const { user } = getUser()
-		const { addDoc, error } = useCollection('skilllists')
+		const { addDoc, error } = useCollection('characters')
 		const { uploadImage, filePath, url } = useStorage()
 		const handleSubmit = async () => {
 			if (file.value) {
-				isPending.value = true
 				await uploadImage(file.value)
-				await addDoc({
+				const res = await addDoc({
 					title: title.value,
 					description: description.value,
 					userId: user.value.uid,
@@ -49,7 +48,7 @@ export default {
 				if(!error.value) {
 					console.log('skill added');
 					isPending.value = false
-					router.push({name: 'home'})
+					router.push({name: 'CharactersDetails', params: {id : res.id }})
 				}
 			}
 		}

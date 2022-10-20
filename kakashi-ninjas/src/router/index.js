@@ -2,13 +2,29 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
-import CreateSkillList from '../views/skills/CreateSkillList.vue'
+import CreateCharacters from '../views/characters/CreateCharacters.vue'
+import CharactersDetails from '../views/characters/CharactersDetails.vue'
+import { projectAuth } from '@/firebase/config'
+
+// auth guard
+const requireAuth = (to, from, next) => {
+  let user = projectAuth.currentUser
+  console.log('current user in auth guard', user);
+
+  if(!user) {
+    next({name: 'Login'})
+  }
+  else {
+    next()
+  }
+}
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: requireAuth
   },
   {
     path: '/login',
@@ -21,9 +37,17 @@ const routes = [
     component: Signup
   },
   {
-    path: '/skills/create',
-    name: 'CreateSkillList',
-    component: CreateSkillList
+    path: '/characters/create',
+    name: 'CreateCharacters',
+    component: CreateCharacters,
+    beforeEnter: requireAuth
+  },
+  {
+    path: '/characters/:id',
+    name: 'CharactersDetails',
+    component: CharactersDetails,
+    beforeEnter: requireAuth,
+    props: true
   },
 ]
 

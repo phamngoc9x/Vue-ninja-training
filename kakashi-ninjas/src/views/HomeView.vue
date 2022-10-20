@@ -1,25 +1,24 @@
 <template>
   <div class="home">
-    Home
     <div v-if="documents">
-      <div v-for="doc in documents" :key="doc.id">
-        <p>{{ doc.title }}</p>
-      </div>
+      <list-view :characters="documents" />
     </div>
-    <div v-if="error"> this is error</div>
+    <div v-if="error">This is error</div>
   </div>
 </template>
 
 <script>
 import getCollection from '@/composables/getCollection';
+import ListView from '../components/ListView.vue';
 
 export default {
   name: 'HomeView',
   components: {
+    ListView
   },
 
   setup() {
-    const { documents, error } = getCollection('skilllists')
+    const { documents, error } = getCollection('characters')
     console.log('documents', documents)
     console.log('error', error.value)
 
