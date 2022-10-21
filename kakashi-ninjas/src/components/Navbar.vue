@@ -2,7 +2,7 @@
   <div class="navbar">
     <nav>
       <img src="@/assets/logo.png" alt="ninja">
-      <h1> <router-link :to="{ name : 'home'}">Favourite Ninjas</router-link> </h1>
+      <h1> <router-link :to="{ name : 'home'}">Favourite Characters Anime</router-link> </h1>
       <div class="links">
         <div class="inline" v-if="!user">
           <router-link class="btn" :to="{ name: 'Signup'}">Signup</router-link>
@@ -10,6 +10,8 @@
         </div>
         <div v-else class="inline">
           <router-link :to="{ name: 'CreateCharacters' }">Create characters</router-link>
+          <router-link :to="{ name: 'UserCharacters' }">My Characters</router-link>
+          <span>Hi here, {{ user.displayName }}</span>
           <button @click="handleLogout">Logout</button>
         </div>
       </div>
@@ -81,5 +83,13 @@ export default {
 
   .inline {
     display: inline-block;
+  }
+
+  span {
+    font-size: 14px;
+    display: inline;
+    margin-left: 16px;
+    padding-left: 16px;
+    border-left: 1px solid #eee;
   }
 </style>

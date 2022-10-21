@@ -16,8 +16,15 @@
 
       <!-- Skill -->
       <div class="skills-list">
-        <p>Skill list here</p>
-
+        <div v-if="!charactersDetails.skills.length">No skills have been added to this characters yet.</div>
+        <div v-for="skill in charactersDetails.skills" :key="skill.id" class="single-skills">
+          <div class="details">
+            <h3>{{ skill.title}}</h3>
+            <p>Created by: {{ skill.createdBy}}</p>
+          </div>
+          <button v-if="ownership" @click="handleClick(skill.id)">Delete</button>
+        </div>
+        <add-skills v-if="ownership" :charactersDetails="charactersDetails" />
       </div>
     </div>
   </div>
@@ -30,14 +37,16 @@ import getUser from '@/composables/getUser';
 import { computed } from '@vue/runtime-core';
 import { useRouter } from 'vue-router';
 import useStorage from '@/composables/useStorage';
+import AddSkills from '../../components/AddSkills.vue';
 
 export default {
+  components: { AddSkills },
   props: ['id'],
   setup(props) {
     const { document: charactersDetails , error } = getDocument('characters', props.id)
     const { user } = getUser()
     const router = useRouter()
-    const { deleteDoc } = useDocument('characters', props.id)
+    const { deleteDoc, updateDoc } = useDocument('characters', props.id)
     const { deleteImage } = useStorage()
 
     const ownership = computed(() => {
@@ -50,7 +59,17 @@ export default {
       await deleteImage(charactersDetails.value.filePath)
       router.push({ name: 'home' })
     }
-    return { charactersDetails, error, ownership, handleDelete }
+
+    const handleClick = async (id) => {
+      const res = charactersDetails.value.skills.filter(item => 
+        item.id != id
+      )
+      await updateDoc({
+        skills: res
+      })
+    }
+  
+    return { charactersDetails, error, ownership, handleDelete, handleClick }
   }
 }
 </script>
@@ -93,10 +112,13 @@ export default {
   }
   .description {
     text-align: left;
-    /* display: -webkit-box;
-    max-width: 100%;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden; */
+  }
+  .single-skills {
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--secondary);
+    margin-bottom: 20px;
   }
 </style>

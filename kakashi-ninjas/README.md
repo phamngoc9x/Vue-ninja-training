@@ -1,4 +1,4 @@
-# kakashi-ninjas
+# favourite-ninjas
 
 ## Project setup
 ```

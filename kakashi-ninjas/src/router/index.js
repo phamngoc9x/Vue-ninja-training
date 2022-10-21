@@ -4,6 +4,7 @@ import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
 import CreateCharacters from '../views/characters/CreateCharacters.vue'
 import CharactersDetails from '../views/characters/CharactersDetails.vue'
+import UserCharacters from '../views/characters/UserCharacters.vue'
 import { projectAuth } from '@/firebase/config'
 
 // auth guard
@@ -48,6 +49,12 @@ const routes = [
     component: CharactersDetails,
     beforeEnter: requireAuth,
     props: true
+  },
+  {
+    path: '/characters/user',
+    name: 'UserCharacters',
+    component: UserCharacters,
+    beforeEnter: requireAuth,
   },
 ]
 
