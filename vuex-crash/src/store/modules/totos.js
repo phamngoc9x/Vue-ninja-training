@@ -1,20 +1,10 @@
 import axios from 'axios';
-import Vue from 'vue'
-import Vuex from 'vuex'
 
-import auth from './modules/auth'
-
-Vue.use(Vuex)
-Vue.config.devtools = true;
-
-const storeData = {
-  modules: {
-    auth
-  },
+const todosModule = {
   state: {
     todos: [],
   },
-
+  
   getters: {
     doneTodos: state => state.todos.filter(todo=> todo.completed),
     progress: (state, getters) => {
@@ -22,7 +12,7 @@ const storeData = {
       return Math.round((doneTodos.length / state.todos.length) * 100)
     }
   },
-
+  
   actions: {
     async deleteTodo({ commit }, todoId) {
       try {
@@ -49,7 +39,7 @@ const storeData = {
       }
     }
   },
-
+  
   mutations: {
     MARK_COMPLETE(state, todoId) {
       state.todos.map(todo => {
@@ -67,9 +57,6 @@ const storeData = {
       state.todos = todos;
     }
   }
-
 }
 
-const store = new Vuex.Store(storeData);
-
-export default store;
+export default todosModule

@@ -1,21 +1,30 @@
 <template>
   <div class="todo-list">
-    <ul v-if="todos">
-      <li v-for="todo in todos" :key="todo.id">
+    <TodoForm />
+    <ul v-if="isAuthenticated">
+      <li v-for="todo in todos" :key="todo.id" :class="todo.completed ? 'completed' : ''">
         {{ todo.title }}
+        <div>
+          <button @click="deleteTodo(todo.id)">Delete</button>
+          <input type="checkbox" :checked="todo.completed" @change="MARK_COMPLETE(todo.id)" />
+        </div>
       </li>
     </ul>
+    <p v-else style="text-align: center">Not Authenticated</p>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+import TodoForm from './TodoForm.vue';
+
 export default {
+  components: { TodoForm },
   name: 'TodoList',
-  computed: {
-    todos() {
-      console.log('abc');
-      return this.$store.state.todos
-    }
+  computed: {...mapState(['todos']), ...mapGetters(['isAuthenticated'])},
+  methods: { ...mapMutations(['MARK_COMPLETE']), ...mapActions(['deleteTodo', 'getTodos'])},
+  created() {
+    this.getTodos()
   }
 }
 </script>
@@ -33,6 +42,8 @@ export default {
  border-radius: 4px;
  background: rgb(240, 240, 240);
  color: black;
+ display: flex;
+ justify-content: space-between;
 }
 
 .todo-list li input[type='checkbox'] {
@@ -46,7 +57,6 @@ export default {
 }
 
 .todo-list li button {
- float: right;
  margin-right: 20px;
 }
 
@@ -58,6 +68,12 @@ export default {
 
 .todo-list li.completed {
  background: rgb(119, 218, 243);
+}
+
+.todo-list li button:hover {
+  cursor: pointer;
+  background: red;
+  color: white;
 }
 
 </style>
